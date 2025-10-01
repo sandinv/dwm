@@ -45,19 +45,14 @@ static const char *colors[][3] = {
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
 static const Rule rules[] = {
+   { "firefox",  NULL,       NULL,       1 << 2,       0,           -1 },
+   { "cryptomator",  NULL,       NULL,   1 << 4,       0,           -1 },
+};
 	/* xprop(1):
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class            instance    title       tags mask     isfloating   monitor */
-	{ "Gimp",            NULL,       NULL,       0,            1,           -1 },
-    { "Google-chrome",   NULL,       NULL,       1 << 1,       0,           -1 },
-    { "Brave-browser",   NULL,       NULL,       1 << 1,       0,           -1 },
-	{ "firefox",         NULL,       NULL,       1 << 2,       0,           -1 },
-	{ "Slack",           NULL,       NULL,       1 << 3,       0,           -1 },
-	{ "discord",         NULL,       NULL,       1 << 4,       0,           -1 },
-	{ "kdenlive",        NULL,       NULL,       1 << 7,       0,           -1 },
-};
 
 /* layout(s) */
 static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
@@ -72,10 +67,8 @@ static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen win
 static const Layout layouts[] = {
 	/* symbol     arrange function */
 	{ "󰝘",        tile },    /* first entry is default */
-	{ "",        NULL },    /* no layout function means floating behavior */
-	{ "[M]",      monocle },
- 	{ "",        spiral },
- 	{ "[\\]",     dwindle },
+	{ "><>",      NULL},     /* no layout function means floating behavior */
+   { "[M]",      monocle },  
 };
 
 /* key definitions */
@@ -104,7 +97,7 @@ static Keychord *keychords[] = {
 
     &((Keychord){1, {{MODKEY, XK_r}},               spawn,          {.v = dmenucmd } }),
     &((Keychord){1, {{MODKEY, XK_Return}},          spawn,          {.v = termcmd } }),
-    &((Keychord){1, {{MODKEY, XK_l}},               spawn,          {.v = slock } }),
+    &((Keychord){1, {{MODKEY|ShiftMask, XK_l}},               spawn,          {.v = slock } }),
     &((Keychord){1, {{ControlMask, XK_Print}},      spawn,          {.v = screenshotcmd } }),
     &((Keychord){1, {{MODKEY, XK_d}},               spawn,          {.v = rofi } }),
 
@@ -112,7 +105,11 @@ static Keychord *keychords[] = {
     &((Keychord){1, {{MODKEY, XK_j}},               focusstack,     {.i = +1 } }),
     &((Keychord){1, {{MODKEY, XK_k}},               focusstack,     {.i = -1 } }),
     &((Keychord){1, {{MODKEY, XK_i}},               incnmaster,     {.i = +1 } }),
+    &((Keychord){1, {{MODKEY, XK_n}},               zoom,           {0} }),
     &((Keychord){1, {{MODKEY, XK_p}},               incnmaster,     {.i = -1 } }),
+    &((Keychord){1, {{MODKEY, XK_t}},               setlayout,     {.v = &layouts[0] } }),
+    &((Keychord){1, {{MODKEY, XK_f}},               setlayout,     {.v = &layouts[1] } }),
+    &((Keychord){1, {{MODKEY, XK_m}},               setlayout,     {.v = &layouts[2] } }),
     &((Keychord){1, {{MODKEY, XK_g}},               setmfact,       {.f = -0.05} }),
     &((Keychord){1, {{MODKEY, XK_h}},               setmfact,       {.f = +0.05} }),
 
@@ -123,14 +120,6 @@ static Keychord *keychords[] = {
 
     &((Keychord){1, {{MODKEY, XK_Tab}},             view,           {0} }),
     &((Keychord){1, {{MODKEY, XK_q}},               killclient,     {0} }),
-
-    &((Keychord){1, {{MODKEY|ShiftMask, XK_t}},     setlayout,      {.v = &layouts[0]} }),
-    // &((Keychord){1, {{MODKEY, XK_f}},               setlayout,      {.v = &layouts[1]} }),
-    &((Keychord){1, {{MODKEY, XK_m}},               setlayout,      {.v = &layouts[2]} }),
-    &((Keychord){1, {{MODKEY, XK_c}},               setlayout,      {.v = &layouts[3]} }),
-    &((Keychord){1, {{MODKEY, XK_o}},               setlayout,      {.v = &layouts[4]} }),
-    &((Keychord){1, {{MODKEY|ShiftMask, XK_Return}},setlayout,      {0} }),
-
     &((Keychord){1, {{MODKEY|ShiftMask, XK_f}},     fullscreen,     {0} }),
     &((Keychord){1, {{MODKEY|ShiftMask, XK_space}}, togglefloating, {0} }),
 
@@ -154,16 +143,6 @@ static Keychord *keychords[] = {
     &((Keychord){2, {{MODKEY, XK_space}, {0, XK_8}}, view, {.ui = 1 << 7} }),
     &((Keychord){2, {{MODKEY, XK_space}, {0, XK_9}}, view, {.ui = 1 << 8} }),
 
-    // Dmenu Scripts
-    &((Keychord){2, {{MODKEY, XK_f}, {0, XK_f}}, spawn, SHCMD("$HOME/repos/dmenu-scripts/repos-dmenu.sh")}),
-    &((Keychord){2, {{MODKEY, XK_f}, {0, XK_o}}, spawn, SHCMD("$HOME/repos/dmenu-scripts/tmux-dmenu.sh")}),
-    &((Keychord){2, {{MODKEY, XK_f}, {0, XK_b}}, spawn, SHCMD("$HOME/repos/dmenu-scripts/bookmarks-dmenu.sh")}),
-    
-    // Emacs Scripts
-    // &((Keychord){2, {{MODKEY, XK_e}, {0, XK_t}}, spawn, SHCMD("$HOME/scripts/tmux-dmenu.sh")}),
-    // &((Keychord){2, {{MODKEY, XK_e}, {0, XK_a}}, spawn, SHCMD("$HOME/scripts/tmux-dmenu.sh")}),
-    // &((Keychord){2, {{MODKEY, XK_e}, {0, XK_t}}, spawn, SHCMD("$HOME/scripts/tmux-dmenu.sh")}),
-
     // TAGKEYS
     TAGKEYS(                        XK_1,                      0)
     TAGKEYS(                        XK_2,                      1)
@@ -178,8 +157,8 @@ static Keychord *keychords[] = {
     &((Keychord){1, {{MODKEY|ShiftMask,   XK_q}},   quit,           {0} }),
     &((Keychord){1, {{MODKEY|ControlMask, XK_r}},   quit,           {1} }),
 
-    &((Keychord){1, {{0, XF86XK_AudioRaiseVolume}}, spawn, {.v = (const char*[]){"pactl", "set-sink-volume", "@DEFAULT_SINK@", "+3%", NULL} } }),
-    &((Keychord){1, {{0, XF86XK_AudioLowerVolume}}, spawn, {.v = (const char*[]){"pactl", "set-sink-volume", "@DEFAULT_SINK@", "-3%", NULL} } }),
+    &((Keychord){1, {{0, XF86XK_AudioRaiseVolume}}, spawn, {.v = (const char*[]){"pactl", "set-sink-volume", "3", "+3%", NULL} } }),
+    &((Keychord){1, {{0, XF86XK_AudioLowerVolume}}, spawn, {.v = (const char*[]){"pactl", "set-sink-volume", "3", "-3%", NULL} } }),
 };
 
 // static const Key keys[] = {
