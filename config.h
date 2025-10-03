@@ -66,9 +66,10 @@ static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen win
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-	{ "󰝘",        tile },    /* first entry is default */
-	{ "><>",      NULL},     /* no layout function means floating behavior */
-   { "[M]",      monocle },  
+    { "󰝘",        tile },    /* first entry is default */
+    { "><>",      NULL},     /* no layout function means floating behavior */
+    { "[M]",      monocle },  
+    { "[D]",      deck},
 };
 
 /* key definitions */
@@ -110,10 +111,11 @@ static Keychord *keychords[] = {
     &((Keychord){1, {{MODKEY, XK_t}},               setlayout,     {.v = &layouts[0] } }),
     &((Keychord){1, {{MODKEY, XK_f}},               setlayout,     {.v = &layouts[1] } }),
     &((Keychord){1, {{MODKEY, XK_m}},               setlayout,     {.v = &layouts[2] } }),
+    &((Keychord){1, {{MODKEY, XK_s}},               setlayout,     {.v = &layouts[3] } }),
     &((Keychord){1, {{MODKEY, XK_g}},               setmfact,       {.f = -0.05} }),
     &((Keychord){1, {{MODKEY, XK_h}},               setmfact,       {.f = +0.05} }),
 
-    &((Keychord){1, {{MODKEY, XK_z}},               incrgaps,       {.i = +3 } }),
+    &((Keychord){2, {{MODKEY, XK_z}},               incrgaps,       {.i = +3 } }),
     &((Keychord){1, {{MODKEY, XK_x}},               incrgaps,       {.i = -3 } }),
     &((Keychord){1, {{MODKEY, XK_a}},               togglegaps,     {0} }),
     &((Keychord){1, {{MODKEY|ShiftMask, XK_a}},     defaultgaps,    {0} }),
