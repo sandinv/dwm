@@ -1,0 +1,11 @@
+# Ignore object files
+*.o
+
+# Ignore the dwm binary
+dwm
+
+# Ignore tags and other development files
+tags
+*.rej
+*.orig
+
